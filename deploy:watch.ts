@@ -1,6 +1,7 @@
-const path = require("path");
-const execa = require("execa");
-const chokidar = require("chokidar");
+import path from "path";
+import execa from "execa";
+import chokidar from "chokidar";
+
 const watcher = chokidar.watch(path.join(__dirname, "contracts"), {
   ignored: /^\./,
   persistent: true,
@@ -8,7 +9,7 @@ const watcher = chokidar.watch(path.join(__dirname, "contracts"), {
 
 const deploy = async () => {
   console.clear();
-  console.log("migrating...");
+  console.log("deploying...");
   await execa.command(`yarn truffle migrate`, {
     stdio: "inherit",
     reject: false,
@@ -17,6 +18,6 @@ const deploy = async () => {
 
 watcher.on("ready", () => {
   deploy().then(() => {
-    watcher.on("change", deploy);
+    watcher.on("all", deploy);
   });
 });
